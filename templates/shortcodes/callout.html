@@ -1,0 +1,8 @@
+{% component callout(type="note", title="") %}
+<div class="zola-callout zola-callout-{{ type }}">
+  <div class="zola-callout-title">{% if title %}{{ title }}{% else %}{{ type | upper }}{% endif %}</div>
+  <div class="zola-callout-body">
+    {{ body | markdown | safe }}
+  </div>
+</div>
+{% endcomponent callout %}

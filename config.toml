@@ -1,0 +1,9 @@
+base_url = "https://page.2401.xyz/zola"
+title = "Zola 0.23 基准实测子站"
+description = "Rust 单体二进制静态网站生成器 Zola v0.23.6 多维度基准实测"
+default_language = "zh"
+compile_sass = false
+build_search_index = false
+
+[markdown]
+github_alerts = true

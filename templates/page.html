@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+
+{% block content %}
+  <div class="doc-meta">
+    <span class="meta-pill">Page: {{ page.relative_path }}</span>
+    {% if page.weight %}
+      <span class="meta-pill">weight = {{ page.weight }}</span>
+    {% endif %}
+  </div>
+  {{ page.content | safe }}
+{% endblock content %}

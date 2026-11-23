@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+  <link rel="stylesheet" href="{{ get_url(path='vendor/katex.min.css') | safe }}">
+  <link rel="stylesheet" href="{{ get_url(path='style.css') | safe }}">
+</head>
+<body>
+  {% set root = get_section(path="_index.md") %}
+  <header class="topbar">
+    <a class="brand" href="{{ root.permalink | safe }}">
+      <span>{{ config.title }}</span>
+      <span class="engine-badge">zola@0.23.6 · Tera</span>
+    </a>
+    <button id="theme-toggle" class="theme-btn" type="button">深色模式</button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="文档章节导航">
+      <div class="sidebar-group-title">基准实测章节</div>
+      <ul>
+        <li>
+          <a class="nav-link {% if current_path and current_path == root.path %}active{% endif %}" href="{{ root.permalink | safe }}">
+            00. 概览与版本档案
+          </a>
+        </li>
+        {% for p in root.pages %}
+        <li>
+          <a class="nav-link {% if current_path and current_path == p.path %}active{% endif %}" href="{{ p.permalink | safe }}">
+            {{ p.title }}
+          </a>
+        </li>
+        {% endfor %}
+        {% for sub_path in root.subsections %}
+          {% set sub = get_section(path=sub_path) %}
+          <li>
+            <a class="nav-link {% if current_path and current_path == sub.path %}active{% endif %}" href="{{ sub.permalink | safe }}">
+              {{ sub.title }}
+            </a>
+            {% if sub.pages or sub.subsections %}
+            <ul>
+              {% for sp in sub.pages %}
+              <li>
+                <a class="nav-link {% if current_path and current_path == sp.path %}active{% endif %}" href="{{ sp.permalink | safe }}">
+                  {{ sp.title }}
+                </a>
+              </li>
+              {% endfor %}
+              {% for nested_path in sub.subsections %}
+                {% set nested = get_section(path=nested_path) %}
+                <li>
+                  <span class="nav-sublabel">{{ nested.title }}</span>
+                  <ul>
+                    {% for np in nested.pages %}
+                    <li>
+                      <a class="nav-link {% if current_path and current_path == np.path %}active{% endif %}" href="{{ np.permalink | safe }}">
+                        {{ np.title }}
+                      </a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </aside>
+
+    <main class="content-wrap">
+      <article class="prose">
+        {% block content %}{% endblock content %}
+      </article>
+    </main>
+  </div>
+
+  <script src="{{ get_url(path='vendor/katex.min.js') | safe }}"></script>
+  <script src="{{ get_url(path='vendor/auto-render.min.js') | safe }}"></script>
+  <script src="{{ get_url(path='vendor/mermaid.min.js') | safe }}"></script>
+  <script src="{{ get_url(path='init.js') | safe }}"></script>
+</body>
+</html>

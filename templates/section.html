@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} | {{ config.title }}{% endblock title %}
+
+{% block content %}
+  <div class="doc-meta">
+    <span class="meta-pill">Branch Section: {{ section.relative_path }}</span>
+    {% if section.weight %}
+      <span class="meta-pill">weight = {{ section.weight }}</span>
+    {% endif %}
+  </div>
+  {{ section.content | safe }}
+{% endblock content %}

@@ -1,0 +1,9 @@
+{
+  "engine": "zola",
+  "packages": {
+    "zola": "0.23.6",
+    "tera": "builtin",
+    "katex": "0.19.1",
+    "mermaid": "12.3.0"
+  }
+}
