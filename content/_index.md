@@ -25,3 +25,4 @@ sort_by = "weight"
 | [`02-diagrams.md`](@/02-diagrams.md) | 流程图与时序图 | 正文代码块零改动；Zola 输出 `data-lang="mermaid"` 属性而非 `class="language-mermaid"` |
 | [`03-math.md`](@/03-math.md) | 数学公式排版 | 同属 `pulldown-cmark` 家族，公式换行 `\\`、细间距 `\,` 与字面量 `\$` 需双写反斜杠防止构建期被吞噬 |
 | [`04-directory/`](@/04-directory/_index.md) | 目录结构与路由取舍 | 强制 `content/` 隔离 + 每个分支子目录须放置 `_index.md`（Branch Section）+ `@/` 编译期死链校验内部链接 |
+| [`05-code-blocks.md`](@/05-code-blocks.md) | 高阶代码块与语法高亮 | `weight = 5`；启用 Zola 0.22+ 全新 Rust **Giallo** TextMate 引擎，实测 `linenos`、`hl_lines=3 7-9` 与 `diff` 着色 |

@@ -7,3 +7,8 @@ build_search_index = false
 
 [markdown]
 github_alerts = true
+
+[markdown.highlighting]
+error_on_missing_language = false
+light_theme = "github-light"
+dark_theme = "github-dark"

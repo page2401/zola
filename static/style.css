@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light;
   --bg: #ffffff;
   --bg-soft: #f6f8fa;
   --bg-elevated: #ffffff;
@@ -18,10 +19,12 @@
   --warning-bg: rgba(154, 103, 0, 0.09);
   --caution-border: #cf222e;
   --caution-bg: rgba(207, 34, 46, 0.08);
+  --giallo-hl-bg: rgba(212, 167, 44, 0.22);
 }
 
 [data-theme="dark"],
 html.dark {
+  color-scheme: dark;
   --bg: #0d1117;
   --bg-soft: #161b22;
   --bg-elevated: #161b22;
@@ -41,6 +44,7 @@ html.dark {
   --warning-bg: rgba(210, 153, 34, 0.14);
   --caution-border: #f85149;
   --caution-bg: rgba(248, 81, 73, 0.12);
+  --giallo-hl-bg: rgba(187, 128, 9, 0.24);
 }
 
 * {
@@ -243,6 +247,31 @@ a:hover {
   background: transparent;
   padding: 0;
   color: inherit;
+}
+
+.prose pre.giallo {
+  color-scheme: inherit !important;
+}
+
+.prose pre.giallo .giallo-l {
+  display: inline-block;
+  min-width: 100%;
+}
+
+.prose pre.giallo .giallo-l[style*="background-color"] {
+  background-color: var(--giallo-hl-bg) !important;
+  border-radius: 3px;
+}
+
+.prose pre.giallo .giallo-ln {
+  display: inline-block;
+  min-width: 1.8em;
+  padding-right: 0.7em;
+  margin-right: 0.65em;
+  text-align: right;
+  user-select: none;
+  -webkit-user-select: none;
+  border-right: 1px solid var(--border);
 }
 
 .prose table {

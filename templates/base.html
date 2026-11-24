@@ -27,11 +27,13 @@
           </a>
         </li>
         {% for p in root.pages %}
+          {% if p.slug != "05-code-blocks" %}
         <li>
           <a class="nav-link {% if current_path and current_path == p.path %}active{% endif %}" href="{{ p.permalink | safe }}">
             {{ p.title }}
           </a>
         </li>
+          {% endif %}
         {% endfor %}
         {% for sub_path in root.subsections %}
           {% set sub = get_section(path=sub_path) %}
@@ -66,6 +68,15 @@
             </ul>
             {% endif %}
           </li>
+        {% endfor %}
+        {% for p in root.pages %}
+          {% if p.slug == "05-code-blocks" %}
+        <li>
+          <a class="nav-link {% if current_path and current_path == p.path %}active{% endif %}" href="{{ p.permalink | safe }}">
+            {{ p.title }}
+          </a>
+        </li>
+          {% endif %}
         {% endfor %}
       </ul>
     </aside>
