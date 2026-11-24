@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>/zola/</loc>
+    </url>
+    <url>
+        <loc>/zola/01-annotations/</loc>
+    </url>
+    <url>
+        <loc>/zola/02-diagrams/</loc>
+    </url>
+    <url>
+        <loc>/zola/03-math/</loc>
+    </url>
+    <url>
+        <loc>/zola/04-directory/</loc>
+    </url>
+    <url>
+        <loc>/zola/04-directory/nested/</loc>
+    </url>
+    <url>
+        <loc>/zola/04-directory/nested/01-order-and-url/</loc>
+    </url>
+    <url>
+        <loc>/zola/04-directory/nested/02-sidebar-sync/</loc>
+    </url>
+    <url>
+        <loc>/zola/05-code-blocks/</loc>
+    </url>
+</urlset>

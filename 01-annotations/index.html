@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>01. 专属标注与元数据 | Zola 0.23 基准实测子站</title>
+  <link rel="stylesheet" href="/zola/vendor/katex.min.css">
+  <link rel="stylesheet" href="/zola/style.css">
+</head>
+<body>
+  
+  <header class="topbar">
+    <a class="brand" href="/zola/">
+      <span>Zola 0.23 基准实测子站</span>
+      <span class="engine-badge">zola@0.23.6 · Tera</span>
+    </a>
+    <button id="theme-toggle" class="theme-btn" type="button">深色模式</button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="文档章节导航">
+      <div class="sidebar-group-title">基准实测章节</div>
+      <ul>
+        <li>
+          <a class="nav-link " href="/zola/">
+            00. 概览与版本档案
+          </a>
+        </li>
+        
+          
+        <li>
+          <a class="nav-link active" href="/zola/01-annotations/">
+            01. 专属标注与元数据
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/02-diagrams/">
+            02. 流程图与时序图
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/03-math/">
+            03. 数学公式排版
+          </a>
+        </li>
+          
+        
+          
+        
+        
+          
+          <li>
+            <a class="nav-link " href="/zola/04-directory/">
+              04. 目录结构与路由取舍
+            </a>
+            
+            <ul>
+              
+              
+                
+                <li>
+                  <span class="nav-sublabel">多级嵌套子章节 (nested)</span>
+                  <ul>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/01-order-and-url/">
+                        嵌套子页 A：排序前缀与 URL 纯净度
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/02-sidebar-sync/">
+                        嵌套子页 B：多级子目录与侧边栏同步
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+              
+            </ul>
+            
+          </li>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/05-code-blocks/">
+            05. 高阶代码块与语法高亮
+          </a>
+        </li>
+          
+        
+      </ul>
+    </aside>
+
+    <main class="content-wrap">
+      <article class="prose">
+        
+  <div class="doc-meta">
+    <span class="meta-pill">Page: 01-annotations.md</span>
+    
+  </div>
+  <h1 id="01-zhuan-shu-biao-zhu-yu-yuan-shu-ju-zola-0-23-shi-ce">01. 专属标注与元数据（Zola 0.23 实测）</h1>
+<p>不同静态网站生成器对“提示框 / 标注（Callouts / Admonitions）”和页面元数据的语法约定存在显著分歧。本文件由原始 GFM 母版派生至 <strong><code>Zola v0.23.6</code></strong>，集中展示 TOML 元数据、<strong>Zola 0.23 全新 Tera v2 组件语法</strong>与 GFM Alerts 的分工边界。</p>
+<h2 id="1-frontmatter-yuan-shu-ju-ji-zhi-toml-yu-extra-ming-ming-kong-jian">1. Frontmatter 元数据机制（<code>+++</code> TOML 与 <code>[extra]</code> 命名空间）</h2>
+<p>虽然 Zola 也兼容 <code>---</code> YAML，但 Zola 官方与 Rust 生态的标准惯例是使用 <strong><code>+++ ... +++</code> TOML Frontmatter</strong>，并对顶层保留字段执行严格校验：</p>
+<ul>
+<li><strong>内置顶层字段</strong>：<code>title</code>、<code>description</code>、<code>weight</code>（控制章节排序权重）、<code>sort_by</code> 等由 Zola 内核直接解析；</li>
+<li><strong>自定义字段隔离</strong>：任何非内置的业务字段（如 <code>badge</code>）<strong>必须放入 <code>[extra]</code> 表下</strong>（模板中通过 <code>page.extra.badge</code> 读取），否则 <code>zola build</code> 会在编译期直接报错退出！</li>
+</ul>
+<h2 id="2-biao-zhun-ti-shi-yu-yi-kuai-zola-0-23-zhong-da-bian-geng-tera-v2-callout-zu-jian">2. 标准提示语义块（Zola 0.23 重大变更：Tera v2 <code>&lt;callout&gt;</code> 组件）</h2>
+<p>在 <code>Zola &lt;=0.22</code> 中，开发者使用旧版 Shortcode <code>{% callout(type="tip") %} ... {% end %}</code>；而 <strong><code>Zola 0.23</code> 升级内置 Tera v2 后彻底移除了旧版 Shortcode 机制</strong>，统一改用卫生组件定义 <code>{% component callout(...) %}</code>，并在 Markdown 正文中通过类 XML 组件标签 <code>{% &lt;callout type="..." title="..."&gt; %} ... {% &lt;/callout&gt; %}</code> 调用：</p>
+<div class="zola-callout zola-callout-note">
+  <div class="zola-callout-title">NOTE · 双分支隔离约定</div>
+  <div class="zola-callout-body">
+    <p>默认信息提示块：静态站点对比平台的每个子模块均独立维护 <code>main</code>（源码）与 <code>page</code>（构建产物）双分支，互不污染提交历史。</p>
+  </div>
+</div>
+<div class="zola-callout zola-callout-tip">
+  <div class="zola-callout-title">性能优化建议（Tera v2 Component 自定义标题）</div>
+  <div class="zola-callout-body">
+    <p>在 Zola 0.23 中，块级组件通过 <code>{% &lt;callout type="tip" title="..."&gt; %}</code> 传参，内部 <code>body | markdown | safe</code> 在单次 Rust 编译管线内极速展开。</p>
+  </div>
+</div>
+<div class="zola-callout zola-callout-warning">
+  <div class="zola-callout-title">Zola 0.23 跨代迁移破坏性边界</div>
+  <div class="zola-callout-body">
+    <p>升级至 <code>zola@0.23</code> 后，全文 Markdown 默认直接经过 Tera v2 模板求值：旧版 <code>{% callout(...) %}</code> 会立即触发 <code>Unknown tag</code> 编译错误，展示字面量模板标签时则必须包裹 <code>{% raw %}...{% endraw %}</code>！</p>
+  </div>
+</div>
+<div class="zola-callout zola-callout-caution">
+  <div class="zola-callout-title">不可逆分支覆盖警告</div>
+  <div class="zola-callout-body">
+    <p>自动化流水线在向 <code>page</code> 分支推送构建产物时会启用 <code>force_orphan: true</code>，切勿在 <code>page</code> 分支直接手工修改代码！</p>
+  </div>
+</div>
+<h2 id="3-ke-zhe-die-xiang-qing-rong-qi-biao-zhun-html-details">3. 可折叠详情容器（标准 HTML <code>&lt;details&gt;</code>）</h2>
+<p>Zola 默认允许在 Markdown 中混写标准 HTML <code>&lt;details&gt;</code> 与 <code>&lt;summary&gt;</code> 标签（<code>&lt;summary&gt;</code> 后保留空行即可在内部正常解析代码块与公式）：</p>
+<details>
+<summary>点击展开查看 Zola 0.23 Tera v2 组件源码结构</summary>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);" ><code data-lang="markdown"><span class="giallo-l"><span>{% </span><span>&lt;</span><span style="color: light-dark(#22863A, #85E89D);">callout</span><span style="color: light-dark(#6F42C1, #B392F0);"> type</span><span>=</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">tip</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#6F42C1, #B392F0);"> title</span><span>=</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">性能优化建议</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>&gt;</span><span> %}</span></span>
+<span class="giallo-l"><span>Zola 0.23 使用 Tera v2 Component 替代了旧版 Shortcode。</span></span>
+<span class="giallo-l"><span>{% </span><span>&lt;/</span><span style="color: light-dark(#22863A, #85E89D);">callout</span><span>&gt;</span><span> %}</span></span></code></pre>
+<p>除了代码块，折叠容器内同样支持列表、表格与数学公式 $f(x) = x^2 + 1$。</p>
+</details>
+<h2 id="4-github-feng-ge-yin-yong-jing-bao-gfm-alerts-kua-kuang-jia-zhi-tong-ce-shi">4. GitHub 风格引用警报（GFM Alerts）跨框架直通测试</h2>
+<p>Zola 提供 <code>[markdown] github_alerts = true</code> 配置开关（默认关闭）。在 <code>config.toml</code> 显式开启后，下方与母版<strong>一字不改</strong>的三段标准 GFM 警报即可原生编译为 <code>&lt;blockquote class="markdown-alert-*"&gt;</code>：</p>
+<blockquote class="markdown-alert-note">
+<p>这是一段标准的 GitHub Flavored Markdown <code>[!NOTE]</code> 警报文本，用于检验各生成器对母版语法的零改造直通能力。</p>
+</blockquote>
+<blockquote class="markdown-alert-important">
+<p>跨平台迁移 Markdown 文档时，是否原生兼容 <code>&gt; [!IMPORTANT]</code> 与 <code>&gt; [!WARNING]</code> 直接决定了母版文档的派生改造成本。</p>
+</blockquote>
+<blockquote class="markdown-alert-caution">
+<p>若目标生成器未内置 GFM Alert 解析器（如 VuePress v1、Starlight 默认配置、Docsify v4 旧插件），上方标记会退化为普通引用块并原样露出 <code>[!CAUTION]</code> 字符串。</p>
+</blockquote>
+
+
+      </article>
+    </main>
+  </div>
+
+  <script src="/zola/vendor/katex.min.js"></script>
+  <script src="/zola/vendor/auto-render.min.js"></script>
+  <script src="/zola/vendor/mermaid.min.js"></script>
+  <script src="/zola/init.js"></script>
+</body>
+</html>

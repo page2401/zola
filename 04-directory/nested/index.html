@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>多级嵌套子章节 (nested) | Zola 0.23 基准实测子站</title>
+  <link rel="stylesheet" href="/zola/vendor/katex.min.css">
+  <link rel="stylesheet" href="/zola/style.css">
+</head>
+<body>
+  
+  <header class="topbar">
+    <a class="brand" href="/zola/">
+      <span>Zola 0.23 基准实测子站</span>
+      <span class="engine-badge">zola@0.23.6 · Tera</span>
+    </a>
+    <button id="theme-toggle" class="theme-btn" type="button">深色模式</button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="文档章节导航">
+      <div class="sidebar-group-title">基准实测章节</div>
+      <ul>
+        <li>
+          <a class="nav-link " href="/zola/">
+            00. 概览与版本档案
+          </a>
+        </li>
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/01-annotations/">
+            01. 专属标注与元数据
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/02-diagrams/">
+            02. 流程图与时序图
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/03-math/">
+            03. 数学公式排版
+          </a>
+        </li>
+          
+        
+          
+        
+        
+          
+          <li>
+            <a class="nav-link " href="/zola/04-directory/">
+              04. 目录结构与路由取舍
+            </a>
+            
+            <ul>
+              
+              
+                
+                <li>
+                  <span class="nav-sublabel">多级嵌套子章节 (nested)</span>
+                  <ul>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/01-order-and-url/">
+                        嵌套子页 A：排序前缀与 URL 纯净度
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/02-sidebar-sync/">
+                        嵌套子页 B：多级子目录与侧边栏同步
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+              
+            </ul>
+            
+          </li>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/05-code-blocks/">
+            05. 高阶代码块与语法高亮
+          </a>
+        </li>
+          
+        
+      </ul>
+    </aside>
+
+    <main class="content-wrap">
+      <article class="prose">
+        
+  <div class="doc-meta">
+    <span class="meta-pill">Branch Section: 04-directory/nested/_index.md</span>
+    
+  </div>
+  <h1 id="duo-ji-qian-tao-zi-zhang-jie-nested-index-md">多级嵌套子章节（<code>nested/_index.md</code>）</h1>
+<p>本文件为 <code>content/04-directory/nested/_index.md</code> 分支元数据文件，用于向 Zola 声明 <code>nested/</code> 为一个独立的子 Section，赋予中文侧边栏分组标题并启用 <code>sort_by = "weight"</code> 权重排序。</p>
+
+
+      </article>
+    </main>
+  </div>
+
+  <script src="/zola/vendor/katex.min.js"></script>
+  <script src="/zola/vendor/auto-render.min.js"></script>
+  <script src="/zola/vendor/mermaid.min.js"></script>
+  <script src="/zola/init.js"></script>
+</body>
+</html>

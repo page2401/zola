@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>00. 概览与版本档案 (Zola 0.23) | Zola 0.23 基准实测子站</title>
+  <link rel="stylesheet" href="/zola/vendor/katex.min.css">
+  <link rel="stylesheet" href="/zola/style.css">
+</head>
+<body>
+  
+  <header class="topbar">
+    <a class="brand" href="/zola/">
+      <span>Zola 0.23 基准实测子站</span>
+      <span class="engine-badge">zola@0.23.6 · Tera</span>
+    </a>
+    <button id="theme-toggle" class="theme-btn" type="button">深色模式</button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="文档章节导航">
+      <div class="sidebar-group-title">基准实测章节</div>
+      <ul>
+        <li>
+          <a class="nav-link active" href="/zola/">
+            00. 概览与版本档案
+          </a>
+        </li>
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/01-annotations/">
+            01. 专属标注与元数据
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/02-diagrams/">
+            02. 流程图与时序图
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/03-math/">
+            03. 数学公式排版
+          </a>
+        </li>
+          
+        
+          
+        
+        
+          
+          <li>
+            <a class="nav-link " href="/zola/04-directory/">
+              04. 目录结构与路由取舍
+            </a>
+            
+            <ul>
+              
+              
+                
+                <li>
+                  <span class="nav-sublabel">多级嵌套子章节 (nested)</span>
+                  <ul>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/01-order-and-url/">
+                        嵌套子页 A：排序前缀与 URL 纯净度
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/02-sidebar-sync/">
+                        嵌套子页 B：多级子目录与侧边栏同步
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+              
+            </ul>
+            
+          </li>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/05-code-blocks/">
+            05. 高阶代码块与语法高亮
+          </a>
+        </li>
+          
+        
+      </ul>
+    </aside>
+
+    <main class="content-wrap">
+      <article class="prose">
+        
+  <div class="doc-meta">
+    <span class="meta-pill">Section: _index.md</span>
+    <span class="meta-pill">sort_by = "weight"</span>
+  </div>
+  <h1 id="zola-0-23-ji-zhun-shi-ce-zi-zhan-rust-tera-v2-dan-ti-er-jin-zhi-yin-qing">Zola 0.23 基准实测子站（Rust + Tera v2 单体二进制引擎）</h1>
+<p>本子站（<code>page2401/zola</code>）由主仓库 <code>page2401.github.io/docs/</code> 的<strong>标准 GitHub Flavored Markdown（GFM）母版</strong>派生适配而来，用于实测 Rust 社区代表性通用静态网站生成器 <strong><code>Zola v0.23.6</code></strong>（升级内置 <strong>Tera v2 组件引擎</strong>、<strong>Giallo 高亮器</strong>与 <code>pulldown-cmark</code>）的毫秒级构建与跨代破坏性变更。</p>
+<h2 id="suo-ding-ban-ben-yu-ji-shu-zhan-dang-an">锁定版本与技术栈档案</h2>
+<table><thead><tr><th style="text-align: left">模块 / 组件</th><th style="text-align: left">锁定版本</th><th style="text-align: left">角色与实测说明</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>zola</code></td><td style="text-align: left"><code>0.23.6</code></td><td style="text-align: left">Rust 单体二进制全功能 SSG（内置 Giallo 高亮、Sass 编译与编译期死链校验，全站构建仅约 20ms）</td></tr>
+<tr><td style="text-align: left"><code>tera</code></td><td style="text-align: left"><code>builtin</code></td><td style="text-align: left"><strong>Zola 0.23 重大升级</strong>：内置 Tera v2 彻底移除旧版 Shortcode，全面转向 <code>{% &lt;component&gt; %}</code> 标签组件</td></tr>
+<tr><td style="text-align: left"><code>katex</code></td><td style="text-align: left"><code>0.19.1</code></td><td style="text-align: left">置于 <code>static/vendor/</code> 本地静态托管（含全套 Webfont，零外部 CDN 依赖）</td></tr>
+<tr><td style="text-align: left"><code>mermaid</code></td><td style="text-align: left"><code>12.3.0</code></td><td style="text-align: left">识别 Zola 输出的 <code>&lt;code data-lang="mermaid"&gt;</code> 节点并随深浅色 CSS 变量实时重绘</td></tr>
+</tbody></table>
+<h2 id="wu-da-ji-zhun-ce-shi-zhang-jie-dao-hang">五大基准测试章节导航</h2>
+<table><thead><tr><th style="text-align: left">章节路径</th><th style="text-align: left">测试维度</th><th style="text-align: left"><code>Zola 0.23.6</code> 派生适配实录</th></tr></thead><tbody>
+<tr><td style="text-align: left"><a href="/zola/01-annotations/"><code>01-annotations.md</code></a></td><td style="text-align: left">专属标注与元数据</td><td style="text-align: left"><strong><code>+++</code> TOML Frontmatter</strong> + <code>[extra]</code> 强约束；<strong>0.23 破坏性变更</strong>：旧版 <code>{% callout() %}</code> 被移除，改用 Tera v2 组件 <code>{% &lt;callout&gt; %}</code>，同时支持 <code>github_alerts = true</code></td></tr>
+<tr><td style="text-align: left"><a href="/zola/02-diagrams/"><code>02-diagrams.md</code></a></td><td style="text-align: left">流程图与时序图</td><td style="text-align: left">正文代码块零改动；Zola 输出 <code>data-lang="mermaid"</code> 属性而非 <code>class="language-mermaid"</code></td></tr>
+<tr><td style="text-align: left"><a href="/zola/03-math/"><code>03-math.md</code></a></td><td style="text-align: left">数学公式排版</td><td style="text-align: left">同属 <code>pulldown-cmark</code> 家族，公式换行 <code>\\</code>、细间距 <code>\,</code> 与字面量 <code>\$</code> 需双写反斜杠防止构建期被吞噬</td></tr>
+<tr><td style="text-align: left"><a href="/zola/04-directory/"><code>04-directory/</code></a></td><td style="text-align: left">目录结构与路由取舍</td><td style="text-align: left">强制 <code>content/</code> 隔离 + 每个分支子目录须放置 <code>_index.md</code>（Branch Section）+ <code>@/</code> 编译期死链校验内部链接</td></tr>
+<tr><td style="text-align: left"><a href="/zola/05-code-blocks/"><code>05-code-blocks.md</code></a></td><td style="text-align: left">高阶代码块与语法高亮</td><td style="text-align: left"><code>weight = 5</code>；启用 Zola 0.22+ 全新 Rust <strong>Giallo</strong> TextMate 引擎，实测 <code>linenos</code>、<code>hl_lines=3 7-9</code> 与 <code>diff</code> 着色</td></tr>
+</tbody></table>
+
+
+      </article>
+    </main>
+  </div>
+
+  <script src="/zola/vendor/katex.min.js"></script>
+  <script src="/zola/vendor/auto-render.min.js"></script>
+  <script src="/zola/vendor/mermaid.min.js"></script>
+  <script src="/zola/init.js"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>04. 目录结构与路由取舍 | Zola 0.23 基准实测子站</title>
+  <link rel="stylesheet" href="/zola/vendor/katex.min.css">
+  <link rel="stylesheet" href="/zola/style.css">
+</head>
+<body>
+  
+  <header class="topbar">
+    <a class="brand" href="/zola/">
+      <span>Zola 0.23 基准实测子站</span>
+      <span class="engine-badge">zola@0.23.6 · Tera</span>
+    </a>
+    <button id="theme-toggle" class="theme-btn" type="button">深色模式</button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="文档章节导航">
+      <div class="sidebar-group-title">基准实测章节</div>
+      <ul>
+        <li>
+          <a class="nav-link " href="/zola/">
+            00. 概览与版本档案
+          </a>
+        </li>
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/01-annotations/">
+            01. 专属标注与元数据
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/02-diagrams/">
+            02. 流程图与时序图
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/03-math/">
+            03. 数学公式排版
+          </a>
+        </li>
+          
+        
+          
+        
+        
+          
+          <li>
+            <a class="nav-link active" href="/zola/04-directory/">
+              04. 目录结构与路由取舍
+            </a>
+            
+            <ul>
+              
+              
+                
+                <li>
+                  <span class="nav-sublabel">多级嵌套子章节 (nested)</span>
+                  <ul>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/01-order-and-url/">
+                        嵌套子页 A：排序前缀与 URL 纯净度
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/02-sidebar-sync/">
+                        嵌套子页 B：多级子目录与侧边栏同步
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+              
+            </ul>
+            
+          </li>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/05-code-blocks/">
+            05. 高阶代码块与语法高亮
+          </a>
+        </li>
+          
+        
+      </ul>
+    </aside>
+
+    <main class="content-wrap">
+      <article class="prose">
+        
+  <div class="doc-meta">
+    <span class="meta-pill">Branch Section: 04-directory/_index.md</span>
+    
+  </div>
+  <h1 id="04-mu-lu-jie-gou-yu-lu-you-qu-she-zola-index-md-section-ti-xi">04. 目录结构与路由取舍（Zola <code>_index.md</code> Section 体系）</h1>
+<p>将母版 <code>docs/04-directory/</code> 派生至 <strong><code>Zola v0.23.6</code></strong> 时，展现了与 Hugo 同源但更简明的 <strong>Section（<code>_index.md</code>）+ Page（<code>*.md</code>）</strong> 目录哲学：</p>
+<ol>
+<li><strong>物理边界清晰（<code>content/</code>）</strong>：所有正文统一存放在 <code>content/</code> 下，与 <code>templates/</code>、<code>static/</code> 和根 <code>README.md</code> 彻底隔离。</li>
+<li><strong>强制 <code>_index.md</code> 分支入口</strong>：
+<ul>
+<li>母版中的 <code>index.md</code> 在 Zola 中表示<strong>叶子页面资源包（Page Bundle）</strong>；要让 <code>04-directory/</code> 与 <code>nested/</code> 成为拥有下属子页面的章节目录（Section），<strong>必须改名为 <code>_index.md</code></strong> 并声明 <code>sort_by = "weight"</code>！</li>
+<li>借助 Tera 模板中的 <code>get_section(path=...)</code> 递归遍历 <code>subsections</code> 与 <code>pages</code>，无需手写侧边栏配置文件，新建 <code>_index.md</code> 即可为 <code>nested/</code> 指定优雅的中文分组标题。</li>
+</ul>
+</li>
+<li><strong><code>@/</code> 编译期内部链接校验</strong>：Zola 使用 <code>@/04-directory/nested/01-order-and-url.md</code> 语法引用内部文档，一旦目标路径拼错或移动，<code>zola build</code> 会直接在构建期报错拦截死链（代价是在离线普通编辑器中无法直接点击跳转）。</li>
+</ol>
+<h2 id="qian-tao-zi-wen-dang-ru-kou">嵌套子文档入口</h2>
+<ul>
+<li><a href="/zola/04-directory/nested/01-order-and-url/">进入子文档 A：排序前缀与 URL 纯净度权衡</a></li>
+<li><a href="/zola/04-directory/nested/02-sidebar-sync/">进入子文档 B：多级子目录与侧边栏同步机制</a></li>
+</ul>
+
+
+      </article>
+    </main>
+  </div>
+
+  <script src="/zola/vendor/katex.min.js"></script>
+  <script src="/zola/vendor/auto-render.min.js"></script>
+  <script src="/zola/vendor/mermaid.min.js"></script>
+  <script src="/zola/init.js"></script>
+</body>
+</html>

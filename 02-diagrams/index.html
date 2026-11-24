@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>02. 流程图与时序图 | Zola 0.23 基准实测子站</title>
+  <link rel="stylesheet" href="/zola/vendor/katex.min.css">
+  <link rel="stylesheet" href="/zola/style.css">
+</head>
+<body>
+  
+  <header class="topbar">
+    <a class="brand" href="/zola/">
+      <span>Zola 0.23 基准实测子站</span>
+      <span class="engine-badge">zola@0.23.6 · Tera</span>
+    </a>
+    <button id="theme-toggle" class="theme-btn" type="button">深色模式</button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="文档章节导航">
+      <div class="sidebar-group-title">基准实测章节</div>
+      <ul>
+        <li>
+          <a class="nav-link " href="/zola/">
+            00. 概览与版本档案
+          </a>
+        </li>
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/01-annotations/">
+            01. 专属标注与元数据
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link active" href="/zola/02-diagrams/">
+            02. 流程图与时序图
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/03-math/">
+            03. 数学公式排版
+          </a>
+        </li>
+          
+        
+          
+        
+        
+          
+          <li>
+            <a class="nav-link " href="/zola/04-directory/">
+              04. 目录结构与路由取舍
+            </a>
+            
+            <ul>
+              
+              
+                
+                <li>
+                  <span class="nav-sublabel">多级嵌套子章节 (nested)</span>
+                  <ul>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/01-order-and-url/">
+                        嵌套子页 A：排序前缀与 URL 纯净度
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/02-sidebar-sync/">
+                        嵌套子页 B：多级子目录与侧边栏同步
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+              
+            </ul>
+            
+          </li>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/05-code-blocks/">
+            05. 高阶代码块与语法高亮
+          </a>
+        </li>
+          
+        
+      </ul>
+    </aside>
+
+    <main class="content-wrap">
+      <article class="prose">
+        
+  <div class="doc-meta">
+    <span class="meta-pill">Page: 02-diagrams.md</span>
+    
+  </div>
+  <h1 id="02-liu-cheng-tu-yu-shi-xu-tu-zola-0-23-mermaid-12-3">02. 流程图与时序图（Zola 0.23 + Mermaid 12.3）</h1>
+<p>在 <code>Zola v0.23.6</code> 中，默认 Markdown 编译器会将 <code>```mermaid</code> 编译为 <code>&lt;pre&gt;&lt;code data-lang="mermaid"&gt;...&lt;/code&gt;&lt;/pre&gt;</code>（自 0.22 起高亮器由 Syntect 替换为 Giallo，属性统一挂载为 <code>data-lang="mermaid"</code>）。本子站通过 <code>static/init.js</code> 精确匹配 <code>data-lang="mermaid"</code> 并调用本地锁定的 <strong><code>mermaid@12.3.0</code></strong>，正文三个图表与母版保持 100% 一致。</p>
+<h2 id="1-fu-za-zi-tu-yu-jia-gou-liu-cheng-tu-flowchart-td">1. 复杂子图与架构流程图（<code>flowchart TD</code>）</h2>
+<p>测试中文节点标签、子图嵌套（<code>subgraph</code>）、虚线边与条件分支：</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">flowchart</span><span style="color: light-dark(#6F42C1, #B392F0);"> TD</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    subgraph</span><span style="color: light-dark(#E36209, #FFAB70);"> MainRepo</span><span style="color: light-dark(#D73A49, #F97583);">[</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;主仓库 page2401.github.io&quot;</span><span style="color: light-dark(#D73A49, #F97583);">]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">        Master</span><span style="color: light-dark(#D73A49, #F97583);">[</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">母版 docs/*.md (Pure GFM)</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">        SubPtr</span><span style="color: light-dark(#D73A49, #F97583);">[</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">Git Submodule 指针 (sites/*)</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">        Workbench</span><span style="color: light-dark(#D73A49, #F97583);">[</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">对比工作台源码 (main)</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    subgraph</span><span style="color: light-dark(#6F42C1, #B392F0);"> SubRepo</span><span>[&quot;</span><span style="color: light-dark(#E36209, #FFAB70);">各独立派生子仓库 </span><span style="color: light-dark(#D73A49, #F97583);">(</span><span style="color: light-dark(#032F62, #9ECBFF);">sites/&lt;id&gt;</span><span style="color: light-dark(#D73A49, #F97583);">)</span><span>&quot;]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">        SrcBranch</span><span style="color: light-dark(#D73A49, #F97583);">[</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">main 分支: 框架配置 + 派生适配版 *.md</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">        Actions</span><span style="color: light-dark(#D73A49, #F97583);">{</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">GitHub Actions 构建</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">}</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">        PageBranch</span><span style="color: light-dark(#D73A49, #F97583);">[</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">page 孤儿分支: 纯静态产物 + .nojekyll</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">        SrcBranch </span><span style="color: light-dark(#D73A49, #F97583);">--&gt;</span><span style="color: light-dark(#E36209, #FFAB70);"> Actions</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">        Actions </span><span style="color: light-dark(#D73A49, #F97583);">--&gt;|</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">自动构建发布</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">|</span><span style="color: light-dark(#E36209, #FFAB70);"> PageBranch</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    Master </span><span style="color: light-dark(#D73A49, #F97583);">-.-&gt;|</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">按各框架方言派生</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">|</span><span style="color: light-dark(#E36209, #FFAB70);"> SrcBranch</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    SubPtr </span><span style="color: light-dark(#D73A49, #F97583);">-.-&gt;|</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">跟踪 main 分支</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">|</span><span style="color: light-dark(#E36209, #FFAB70);"> SrcBranch</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    Workbench </span><span style="color: light-dark(#D73A49, #F97583);">--&gt;|</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">对比母版与各派生版差异</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">|</span><span style="color: light-dark(#E36209, #FFAB70);"> Portal</span><span style="color: light-dark(#D73A49, #F97583);">[</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">https://page.2401.xyz/</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    PageBranch </span><span style="color: light-dark(#D73A49, #F97583);">--&gt;|</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">GitHub Organization Pages</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">|</span><span style="color: light-dark(#E36209, #FFAB70);"> SubSite</span><span style="color: light-dark(#D73A49, #F97583);">[</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">https://page.2401.xyz/&lt;id&gt;/</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);">]</span></span></code></pre><h2 id="2-bian-yi-guan-xian-jiao-hu-shi-xu-tu-sequencediagram">2. 编译管线交互时序图（<code>sequenceDiagram</code>）</h2>
+<p>测试多参与者生命线、<code>alt</code> 分支块及激活框（<code>activate</code>/<code>deactivate</code>）：</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">sequenceDiagram</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    autonumber</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    actor</span><span style="color: light-dark(#E36209, #FFAB70);"> Author</span><span style="color: light-dark(#D73A49, #F97583);"> as</span><span style="color: light-dark(#032F62, #9ECBFF);"> 文档作者</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    participant</span><span style="color: light-dark(#E36209, #FFAB70);"> Master</span><span style="color: light-dark(#D73A49, #F97583);"> as</span><span style="color: light-dark(#032F62, #9ECBFF);"> 主仓母版 docs/*.md</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    participant</span><span style="color: light-dark(#E36209, #FFAB70);"> SubGit</span><span style="color: light-dark(#D73A49, #F97583);"> as</span><span style="color: light-dark(#032F62, #9ECBFF);"> 子模块 main 分支</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    participant</span><span style="color: light-dark(#E36209, #FFAB70);"> CI</span><span style="color: light-dark(#D73A49, #F97583);"> as</span><span style="color: light-dark(#032F62, #9ECBFF);"> GitHub Actions (Node 22)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    participant</span><span style="color: light-dark(#E36209, #FFAB70);"> Pages</span><span style="color: light-dark(#D73A49, #F97583);"> as</span><span style="color: light-dark(#032F62, #9ECBFF);"> GitHub Pages (page 分支)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    Author</span><span style="color: light-dark(#D73A49, #F97583);">-&gt;&gt;</span><span style="color: light-dark(#E36209, #FFAB70);">Master</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 编写标准 GFM 基准母版</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    Master</span><span style="color: light-dark(#D73A49, #F97583);">-&gt;&gt;</span><span style="color: light-dark(#E36209, #FFAB70);">SubGit</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 派生适配特定 SSG 版本语法</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    SubGit</span><span style="color: light-dark(#D73A49, #F97583);">-&gt;&gt;</span><span style="color: light-dark(#E36209, #FFAB70);">CI</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 触发 deploy-page.yml 工作流</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    activate</span><span style="color: light-dark(#E36209, #FFAB70);"> CI</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    alt</span><span style="color: light-dark(#032F62, #9ECBFF);"> 编译型 SSG (VitePress / VuePress / Starlight)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">        CI</span><span style="color: light-dark(#D73A49, #F97583);">-&gt;&gt;</span><span style="color: light-dark(#E36209, #FFAB70);">CI</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 预编译静态 HTML + 公式 + 图表挂载点</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    else</span><span style="color: light-dark(#032F62, #9ECBFF);"> 运行时引擎 (Docsify v4 / v5)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">        CI</span><span style="color: light-dark(#D73A49, #F97583);">-&gt;&gt;</span><span style="color: light-dark(#E36209, #FFAB70);">CI</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 组装原始 *.md + _sidebar.md + 锁定版本 vendor</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    end</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    CI</span><span style="color: light-dark(#D73A49, #F97583);">-&gt;&gt;</span><span style="color: light-dark(#E36209, #FFAB70);">Pages</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> force_orphan 推送至孤儿分支 page</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    deactivate</span><span style="color: light-dark(#E36209, #FFAB70);"> CI</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    Pages</span><span style="color: light-dark(#D73A49, #F97583);">--&gt;&gt;</span><span style="color: light-dark(#E36209, #FFAB70);">Author</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 同源子路径 /&lt;id&gt;/ 即刻生效</span></span></code></pre><h2 id="3-zi-mo-kuai-tong-bu-zhuang-tai-ji-statediagram-v2">3. 子模块同步状态机（<code>stateDiagram-v2</code>）</h2>
+<p>测试状态机语法与状态迁移说明标签：</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);" ><code data-lang="mermaid"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">stateDiagram-v2</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    [*]</span><span style="color: light-dark(#D73A49, #F97583);"> --&gt;</span><span style="color: light-dark(#E36209, #FFAB70);"> MasterEdited</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 更新主仓母版 docs/*.md</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    MasterEdited</span><span style="color: light-dark(#D73A49, #F97583);"> --&gt;</span><span style="color: light-dark(#E36209, #FFAB70);"> SubmoduleDerived</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 同步派生适配至各子模块 *.md</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    SubmoduleDerived</span><span style="color: light-dark(#D73A49, #F97583);"> --&gt;</span><span style="color: light-dark(#E36209, #FFAB70);"> SubmodulePushed</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 子模块 commit &amp; push origin main</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    SubmodulePushed</span><span style="color: light-dark(#D73A49, #F97583);"> --&gt;</span><span style="color: light-dark(#E36209, #FFAB70);"> PageDeploying</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 子仓库 Actions 自动更新 page 分支</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    SubmodulePushed</span><span style="color: light-dark(#D73A49, #F97583);"> --&gt;</span><span style="color: light-dark(#E36209, #FFAB70);"> MainRepoUpdated</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 主仓库更新子模块指针并构建对比数据</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    PageDeploying</span><span style="color: light-dark(#D73A49, #F97583);"> --&gt;</span><span style="color: light-dark(#E36209, #FFAB70);"> LiveSynced</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 线上渲染与母版源码差异视图全部就绪</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    MainRepoUpdated</span><span style="color: light-dark(#D73A49, #F97583);"> --&gt;</span><span style="color: light-dark(#E36209, #FFAB70);"> LiveSynced</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> 计算相对母版改动行数完成</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">    LiveSynced</span><span style="color: light-dark(#D73A49, #F97583);"> --&gt;</span><span style="color: light-dark(#D73A49, #F97583);"> [*]</span></span></code></pre>
+
+      </article>
+    </main>
+  </div>
+
+  <script src="/zola/vendor/katex.min.js"></script>
+  <script src="/zola/vendor/auto-render.min.js"></script>
+  <script src="/zola/vendor/mermaid.min.js"></script>
+  <script src="/zola/init.js"></script>
+</body>
+</html>

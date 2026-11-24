@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>03. 数学公式排版 | Zola 0.23 基准实测子站</title>
+  <link rel="stylesheet" href="/zola/vendor/katex.min.css">
+  <link rel="stylesheet" href="/zola/style.css">
+</head>
+<body>
+  
+  <header class="topbar">
+    <a class="brand" href="/zola/">
+      <span>Zola 0.23 基准实测子站</span>
+      <span class="engine-badge">zola@0.23.6 · Tera</span>
+    </a>
+    <button id="theme-toggle" class="theme-btn" type="button">深色模式</button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="文档章节导航">
+      <div class="sidebar-group-title">基准实测章节</div>
+      <ul>
+        <li>
+          <a class="nav-link " href="/zola/">
+            00. 概览与版本档案
+          </a>
+        </li>
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/01-annotations/">
+            01. 专属标注与元数据
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/02-diagrams/">
+            02. 流程图与时序图
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link active" href="/zola/03-math/">
+            03. 数学公式排版
+          </a>
+        </li>
+          
+        
+          
+        
+        
+          
+          <li>
+            <a class="nav-link " href="/zola/04-directory/">
+              04. 目录结构与路由取舍
+            </a>
+            
+            <ul>
+              
+              
+                
+                <li>
+                  <span class="nav-sublabel">多级嵌套子章节 (nested)</span>
+                  <ul>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/01-order-and-url/">
+                        嵌套子页 A：排序前缀与 URL 纯净度
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/02-sidebar-sync/">
+                        嵌套子页 B：多级子目录与侧边栏同步
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+              
+            </ul>
+            
+          </li>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/05-code-blocks/">
+            05. 高阶代码块与语法高亮
+          </a>
+        </li>
+          
+        
+      </ul>
+    </aside>
+
+    <main class="content-wrap">
+      <article class="prose">
+        
+  <div class="doc-meta">
+    <span class="meta-pill">Page: 03-math.md</span>
+    
+  </div>
+  <h1 id="03-shu-xue-gong-shi-pai-ban-zola-0-23-katex-0-19">03. 数学公式排版（Zola 0.23 + KaTeX 0.19）</h1>
+<p><code>Zola v0.23.6</code> 底层同样采用 Rust <code>pulldown-cmark</code> 解析器，且尚未内置构建期数学公式 AST 保护。因此直接挂载客户端 <strong><code>katex@0.19.1</code>（<code>static/vendor/</code> 本地托管）</strong> 时，<code>pulldown-cmark</code> 会先按 CommonMark 标点转义规则消费单反斜杠——这要求派生文档将公式换行 <code>\\</code>、微间距 <code>\,</code> / <code>\!</code> 及字面量美元转义 <code>\$</code> 双写为 <code>\\\\</code>、<code>\\,</code>、<code>\\!</code> 与 <code>\\$</code>，与母版对比时清晰暴露出无公式 AST 保护引擎的改造成本。</p>
+<h2 id="1-xing-nei-gong-shi-yu-zhong-ying-wen-hun-pai-ji-xian-dui-qi">1. 行内公式与中英文混排基线对齐</h2>
+<p>考察重点：行内公式在中文字号下的缩放比例、上下标是否撑乱行高，以及分数与根号在行内的紧凑度。</p>
+<ul>
+<li>质能方程 $E = mc^2$ 与欧拉恒等式 $e^{i\pi} + 1 = 0$ 嵌入在连续中文段落中的视觉基线表现。</li>
+<li>归并排序的平均时间复杂度为 $\mathcal{O}(n \log n)$，而空间复杂度为 $\Theta(n)$；当输入规模满足 $n \ge 2^{16}$ 时，常数因子差异显著。</li>
+<li>贝叶斯条件概率公式行内排印：$P(A \mid B) = \frac{P(B \mid A)\,P(A)}{P(B)}$，以及带根号的欧氏距离 $d(\mathbf{x}, \mathbf{y}) = \sqrt{\sum_{i=1}^{n}(x_i - y_i)^2}$。</li>
+</ul>
+<h2 id="2-duo-xing-deng-shi-dui-qi-tui-dao-aligned-huan-jing">2. 多行等式对齐推导（<code>aligned</code> 环境）</h2>
+<p>测试 <code>\begin{aligned} ... \end{aligned}</code> 多行对齐、积分算子与括号自动缩放 <code>\left( ... \right)</code>：</p>
+<p>$$
+\begin{aligned}
+I^2 &amp;= \left( \int_{-\infty}^{+\infty} e^{-x^2}\,\mathrm{d}x \right) \left( \int_{-\infty}^{+\infty} e^{-y^2}\,\mathrm{d}y \right) \\
+&amp;= \iint_{\mathbb{R}^2} e^{-(x^2 + y^2)}\,\mathrm{d}x\,\mathrm{d}y \\
+&amp;= \int_{0}^{2\pi} \int_{0}^{+\infty} e^{-r^2} r\,\mathrm{d}r\,\mathrm{d}\theta \\
+&amp;= 2\pi \cdot \left[ -\frac{1}{2} e^{-r^2} \right]_{0}^{+\infty} = \pi \implies I = \sqrt{\pi}
+\end{aligned}
+$$</p>
+<h2 id="3-ju-zhen-yun-suan-yu-zhu-yi-li-ji-zhi-bmatrix-huan-jing">3. 矩阵运算与注意力机制（<code>bmatrix</code> 环境）</h2>
+<p>测试缩放点积注意力公式及矩阵乘法排版：</p>
+<p>$$
+\mathrm{Attention}(Q, K, V) = \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
+$$</p>
+<p>$$
+\mathbf{J}_{\mathbf{f}}(\mathbf{x}) =
+\begin{bmatrix}
+\dfrac{\partial f_1}{\partial x_1} &amp; \dfrac{\partial f_1}{\partial x_2} &amp; \cdots &amp; \dfrac{\partial f_1}{\partial x_n} \\[6pt]
+\dfrac{\partial f_2}{\partial x_1} &amp; \dfrac{\partial f_2}{\partial x_2} &amp; \cdots &amp; \dfrac{\partial f_2}{\partial x_n} \\[4pt]
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\[4pt]
+\dfrac{\partial f_m}{\partial x_1} &amp; \dfrac{\partial f_m}{\partial x_2} &amp; \cdots &amp; \dfrac{\partial f_m}{\partial x_n}
+\end{bmatrix}
+$$</p>
+<h2 id="4-fen-duan-han-shu-yu-you-hua-mu-biao-cases-huan-jing">4. 分段函数与优化目标（<code>cases</code> 环境）</h2>
+<p>测试 Huber Loss 分段函数与花括号对齐：</p>
+<p>$$
+\mathcal{L}_{\delta}(y, \hat{y}) =
+\begin{cases}
+\dfrac{1}{2}(y - \hat{y})^2, &amp; \text{if } |y - \hat{y}| \le \delta, \\[8pt]
+\delta \cdot \left(|y - \hat{y}| - \dfrac{1}{2}\delta\right), &amp; \text{otherwise.}
+\end{cases}
+$$</p>
+<h2 id="5-zi-mian-liang-mei-yuan-fu-hao-zhuan-yi-bian-jie-ce-shi">5. 字面量美元符号 <code>\$</code> 转义边界测试</h2>
+<p>在启用 <code>$...$</code> 行内数学公式后，同一段落出现两个价格数字（例如基础套餐 \$29/月 与专业版 \$99/月）时，因 <code>pulldown-cmark</code> 先消费一层反斜杠，须写作 <code>\\$</code> 才能避免中间中文被误解析为公式；而在反引号代码片段中编写环境变量 <code>$HOME</code> 或 <code>awk '{print $1}'</code> 则原样保留，无需反斜杠转义。</p>
+
+
+      </article>
+    </main>
+  </div>
+
+  <script src="/zola/vendor/katex.min.js"></script>
+  <script src="/zola/vendor/auto-render.min.js"></script>
+  <script src="/zola/vendor/mermaid.min.js"></script>
+  <script src="/zola/init.js"></script>
+</body>
+</html>

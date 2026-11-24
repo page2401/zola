@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>05. 高阶代码块与语法高亮 | Zola 0.23 基准实测子站</title>
+  <link rel="stylesheet" href="/zola/vendor/katex.min.css">
+  <link rel="stylesheet" href="/zola/style.css">
+</head>
+<body>
+  
+  <header class="topbar">
+    <a class="brand" href="/zola/">
+      <span>Zola 0.23 基准实测子站</span>
+      <span class="engine-badge">zola@0.23.6 · Tera</span>
+    </a>
+    <button id="theme-toggle" class="theme-btn" type="button">深色模式</button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="文档章节导航">
+      <div class="sidebar-group-title">基准实测章节</div>
+      <ul>
+        <li>
+          <a class="nav-link " href="/zola/">
+            00. 概览与版本档案
+          </a>
+        </li>
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/01-annotations/">
+            01. 专属标注与元数据
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/02-diagrams/">
+            02. 流程图与时序图
+          </a>
+        </li>
+          
+        
+          
+        <li>
+          <a class="nav-link " href="/zola/03-math/">
+            03. 数学公式排版
+          </a>
+        </li>
+          
+        
+          
+        
+        
+          
+          <li>
+            <a class="nav-link " href="/zola/04-directory/">
+              04. 目录结构与路由取舍
+            </a>
+            
+            <ul>
+              
+              
+                
+                <li>
+                  <span class="nav-sublabel">多级嵌套子章节 (nested)</span>
+                  <ul>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/01-order-and-url/">
+                        嵌套子页 A：排序前缀与 URL 纯净度
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a class="nav-link " href="/zola/04-directory/nested/02-sidebar-sync/">
+                        嵌套子页 B：多级子目录与侧边栏同步
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+              
+            </ul>
+            
+          </li>
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        <li>
+          <a class="nav-link active" href="/zola/05-code-blocks/">
+            05. 高阶代码块与语法高亮
+          </a>
+        </li>
+          
+        
+      </ul>
+    </aside>
+
+    <main class="content-wrap">
+      <article class="prose">
+        
+  <div class="doc-meta">
+    <span class="meta-pill">Page: 05-code-blocks.md</span>
+    
+  </div>
+  <h1 id="05-gao-jie-dai-ma-kuai-yu-yu-fa-gao-liang-zola-0-23-rust-giallo-yin-qing">05. 高阶代码块与语法高亮（Zola 0.23 + Rust Giallo 引擎）</h1>
+<p>技术文档中超过 40% 的篇幅由代码块构成，但标准 CommonMark / GitHub Flavored Markdown <strong>仅定义了围栏语言标识（<code>```ts</code>）</strong>，并未定义文件名标题栏、指定行高亮、带语法着色的行级 Diff 以及多语言 Tab 代码组。本文件由原始 GFM 母版派生适配至 <strong><code>Zola v0.23.6</code></strong>，实测其全新内置的 <strong>Rust <code>Giallo</code>（v0.5.2）</strong> 语法高亮器。</p>
+<h2 id="1-dai-ma-kuai-wen-jian-ming-biao-ti-lan-yu-ji-chu-yu-fa-gao-liang-cong-syntect-dao-giallo">1. 代码块文件名标题栏与基础语法高亮（从 <code>syntect</code> 到 <code>Giallo</code>）</h2>
+<p>自 <code>Zola 0.22+</code> 起，Zola 正式弃用了早期基于 Sublime Text 语法的 <code>syntect</code>，全面切换为由 Zola 作者亲自用 Rust 编写的 <strong>Giallo</strong>（兼容 VS Code / Shiki 同源的 TextMate 语法与双主题亮暗色切换）。在 <code>config.toml</code> 配置 <code>[markdown.highlighting]</code> 后，构建期以亚毫秒速度直接编译出零客户端 JS 的 <code>&lt;pre class="giallo"&gt;</code> 节点：</p>
+<p><strong><code>scripts/resolve-route.ts</code></strong></p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);" ><code data-lang="typescript"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">export</span><span style="color: light-dark(#D73A49, #F97583);"> interface</span><span style="color: light-dark(#6F42C1, #B392F0);"> RouteContext</span><span> {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">  basePath</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> string</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">  slug</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> string</span></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">  cleanUrls</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> boolean</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">export</span><span style="color: light-dark(#D73A49, #F97583);"> function</span><span style="color: light-dark(#6F42C1, #B392F0);"> formatDocRoute</span><span>(</span><span style="color: light-dark(#E36209, #FFAB70);">ctx</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> RouteContext</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> string</span><span> {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  const</span><span style="color: light-dark(#005CC5, #79B8FF);"> prefix</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> ctx</span><span>.</span><span>basePath</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">endsWith</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&#39;</span><span style="color: light-dark(#032F62, #9ECBFF);">/</span><span style="color: light-dark(#032F62, #9ECBFF);">&#39;</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> ?</span><span> ctx</span><span>.</span><span>basePath</span><span style="color: light-dark(#D73A49, #F97583);"> :</span><span style="color: light-dark(#032F62, #9ECBFF);"> `</span><span style="color: light-dark(#032F62, #9ECBFF);">${</span><span>ctx</span><span style="color: light-dark(#032F62, #9ECBFF);">.</span><span>basePath</span><span style="color: light-dark(#032F62, #9ECBFF);">}</span><span style="color: light-dark(#032F62, #9ECBFF);">/</span><span style="color: light-dark(#032F62, #9ECBFF);">`</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  const</span><span style="color: light-dark(#005CC5, #79B8FF);"> normalized</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> ctx</span><span>.</span><span>slug</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">replace</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">/</span><span style="color: light-dark(#D73A49, #F97583);">^</span><span style="color: light-dark(#22863A, #85E89D);font-weight: bold;">\/</span><span style="color: light-dark(#D73A49, #F97583);">+</span><span style="color: light-dark(#D73A49, #F97583);">|</span><span style="color: light-dark(#22863A, #85E89D);font-weight: bold;">\/</span><span style="color: light-dark(#D73A49, #F97583);">+</span><span style="color: light-dark(#D73A49, #F97583);">$</span><span style="color: light-dark(#032F62, #9ECBFF);">/</span><span style="color: light-dark(#D73A49, #F97583);">g</span><span>,</span><span style="color: light-dark(#032F62, #9ECBFF);"> &#39;</span><span style="color: light-dark(#032F62, #9ECBFF);">&#39;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  if</span><span> (</span><span style="color: light-dark(#D73A49, #F97583);">!</span><span>normalized</span><span style="color: light-dark(#D73A49, #F97583);"> ||</span><span> normalized</span><span style="color: light-dark(#D73A49, #F97583);"> ===</span><span style="color: light-dark(#032F62, #9ECBFF);"> &#39;</span><span style="color: light-dark(#032F62, #9ECBFF);">index</span><span style="color: light-dark(#032F62, #9ECBFF);">&#39;</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> return</span><span> prefix</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  return</span><span> ctx</span><span>.</span><span>cleanUrls</span><span style="color: light-dark(#D73A49, #F97583);"> ?</span><span style="color: light-dark(#032F62, #9ECBFF);"> `</span><span style="color: light-dark(#032F62, #9ECBFF);">${</span><span>prefix</span><span style="color: light-dark(#032F62, #9ECBFF);">}</span><span style="color: light-dark(#032F62, #9ECBFF);">${</span><span>normalized</span><span style="color: light-dark(#032F62, #9ECBFF);">}</span><span style="color: light-dark(#032F62, #9ECBFF);">/</span><span style="color: light-dark(#032F62, #9ECBFF);">`</span><span style="color: light-dark(#D73A49, #F97583);"> :</span><span style="color: light-dark(#032F62, #9ECBFF);"> `</span><span style="color: light-dark(#032F62, #9ECBFF);">${</span><span>prefix</span><span style="color: light-dark(#032F62, #9ECBFF);">}</span><span style="color: light-dark(#032F62, #9ECBFF);">${</span><span>normalized</span><span style="color: light-dark(#032F62, #9ECBFF);">}</span><span style="color: light-dark(#032F62, #9ECBFF);">.html</span><span style="color: light-dark(#032F62, #9ECBFF);">`</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre><h2 id="2-guan-jian-xing-ju-jiao-yu-xing-hao-xuan-ran-linenos-yu-hl-lines-3-7-9">2. 关键行聚焦与行号渲染（<code>linenos</code> 与 <code>hl_lines=3 7-9</code>）</h2>
+<p>Zola 沿用了经典的逗号分隔围栏信息串协议（无需侵入修改源码内容）：</p>
+<ul>
+<li><strong><code>linenos</code></strong>：为每一行生成 <code>&lt;span aria-hidden="true" class="giallo-ln"&gt;</code> 不可选中行号前缀；</li>
+<li><strong><code>hl_lines=3 7-9</code></strong>：以空格分隔单行与闭区间（1-based 索引），将第 <code>3</code> 行与第 <code>7–9</code> 行标记为高亮行：</li>
+</ul>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);" ><code data-lang="json"><span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: light-dark(#1B1F234D, #444D56);"> 1</span><span>{</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: light-dark(#1B1F234D, #444D56);"> 2</span><span style="color: light-dark(#005CC5, #79B8FF);">  &quot;</span><span style="color: light-dark(#005CC5, #79B8FF);">id</span><span style="color: light-dark(#005CC5, #79B8FF);">&quot;</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">ssg-benchmark</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span></span>
+<span class="giallo-l" style="background-color: light-dark(#F6F8FA, #2B3036);"><span aria-hidden="true" class="giallo-ln" style="color: light-dark(#1B1F234D, #444D56);"> 3</span><span style="color: light-dark(#005CC5, #79B8FF);">  &quot;</span><span style="color: light-dark(#005CC5, #79B8FF);">routeStyle</span><span style="color: light-dark(#005CC5, #79B8FF);">&quot;</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">clean</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: light-dark(#1B1F234D, #444D56);"> 4</span><span style="color: light-dark(#005CC5, #79B8FF);">  &quot;</span><span style="color: light-dark(#005CC5, #79B8FF);">strictZeroCdn</span><span style="color: light-dark(#005CC5, #79B8FF);">&quot;</span><span>:</span><span style="color: light-dark(#005CC5, #79B8FF);"> true</span><span>,</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: light-dark(#1B1F234D, #444D56);"> 5</span><span style="color: light-dark(#005CC5, #79B8FF);">  &quot;</span><span style="color: light-dark(#005CC5, #79B8FF);">markdown</span><span style="color: light-dark(#005CC5, #79B8FF);">&quot;</span><span>:</span><span> {</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: light-dark(#1B1F234D, #444D56);"> 6</span><span style="color: light-dark(#005CC5, #79B8FF);">    &quot;</span><span style="color: light-dark(#005CC5, #79B8FF);">mathEngine</span><span style="color: light-dark(#005CC5, #79B8FF);">&quot;</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">katex</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span></span>
+<span class="giallo-l" style="background-color: light-dark(#F6F8FA, #2B3036);"><span aria-hidden="true" class="giallo-ln" style="color: light-dark(#1B1F234D, #444D56);"> 7</span><span style="color: light-dark(#005CC5, #79B8FF);">    &quot;</span><span style="color: light-dark(#005CC5, #79B8FF);">diagramEngine</span><span style="color: light-dark(#005CC5, #79B8FF);">&quot;</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">mermaid</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span></span>
+<span class="giallo-l" style="background-color: light-dark(#F6F8FA, #2B3036);"><span aria-hidden="true" class="giallo-ln" style="color: light-dark(#1B1F234D, #444D56);"> 8</span><span style="color: light-dark(#005CC5, #79B8FF);">    &quot;</span><span style="color: light-dark(#005CC5, #79B8FF);">lineHighlight</span><span style="color: light-dark(#005CC5, #79B8FF);">&quot;</span><span>:</span><span style="color: light-dark(#005CC5, #79B8FF);"> true</span><span>,</span></span>
+<span class="giallo-l" style="background-color: light-dark(#F6F8FA, #2B3036);"><span aria-hidden="true" class="giallo-ln" style="color: light-dark(#1B1F234D, #444D56);"> 9</span><span style="color: light-dark(#005CC5, #79B8FF);">    &quot;</span><span style="color: light-dark(#005CC5, #79B8FF);">codeTransformers</span><span style="color: light-dark(#005CC5, #79B8FF);">&quot;</span><span>:</span><span> [</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">diff</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">focus</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>]</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: light-dark(#1B1F234D, #444D56);">10</span><span>  }</span></span>
+<span class="giallo-l"><span aria-hidden="true" class="giallo-ln" style="color: light-dark(#1B1F234D, #444D56);">11</span><span>}</span></span></code></pre><h2 id="3-dai-ma-zeng-shan-dui-bi-zhao-se-giallo-diff-yu-fa-gao-liang">3. 代码增删对比着色（Giallo <code>diff</code> 语法高亮）</h2>
+<p>Giallo 内置标准 <code>diff</code> TextMate 语法定义，无需额外插件即可在构建期对 <code>-</code> 删除行与 <code>+</code> 新增行赋予双主题色彩（同样受限于标准 <code>diff</code> 围栏，内部不再嵌套解析 TypeScript 词法）：</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);" ><code data-lang="diff"><span class="giallo-l"><span> export function mountSubsite(baseDir: string, subPath: string): string | null {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#B31D28, #FDAEB7);background-color: light-dark(#FFEEF0, #86181D);">-</span><span style="color: light-dark(#B31D28, #FDAEB7);background-color: light-dark(#FFEEF0, #86181D);">  const cleanRel = decodeURIComponent(subPath).replace(/\.\./g, &#39;&#39;)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#B31D28, #FDAEB7);background-color: light-dark(#FFEEF0, #86181D);">-</span><span style="color: light-dark(#B31D28, #FDAEB7);background-color: light-dark(#FFEEF0, #86181D);">  return `${baseDir}/${cleanRel}`</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);background-color: light-dark(#F0FFF4, #144620);">+</span><span style="color: light-dark(#22863A, #85E89D);background-color: light-dark(#F0FFF4, #144620);">  const resolvedBase = path.resolve(baseDir)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);background-color: light-dark(#F0FFF4, #144620);">+</span><span style="color: light-dark(#22863A, #85E89D);background-color: light-dark(#F0FFF4, #144620);">  const target = path.resolve(resolvedBase, decodeURIComponent(subPath).replace(/^\/+/, &#39;&#39;))</span></span>
+<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);background-color: light-dark(#F0FFF4, #144620);">+</span><span style="color: light-dark(#22863A, #85E89D);background-color: light-dark(#F0FFF4, #144620);">  return target.startsWith(`${resolvedBase}${path.sep}`) ? target : null</span></span>
+<span class="giallo-l"><span> }</span></span></code></pre><h2 id="4-duo-yu-yan-yun-xing-shi-ming-ling-zu-yuan-sheng-details-ling-jiao-ben-shou-feng-qin">4. 多语言运行时命令组（原生 <code>&lt;details&gt;</code> 零脚本手风琴）</h2>
+<p>Zola 坚持零前端框架绑定的纯粹静态哲学。借助标准 HTML <code>&lt;details name="zola-cmd-group"&gt;</code> 互斥展开特性，无需引入任何运行时 Tab 脚本即可组织跨语言构建命令：</p>
+<details name="zola-cmd-group" open>
+<summary>Rust 单体二进制（<code>config.toml</code> · 当前子站）</summary>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);" ><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">zola</span><span style="color: light-dark(#032F62, #9ECBFF);"> build</span><span style="color: light-dark(#005CC5, #79B8FF);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);">-base-url</span><span style="color: light-dark(#032F62, #9ECBFF);"> /zola</span></span></code></pre></details>
+<details name="zola-cmd-group">
+<summary>Node.js（<code>package.json</code>）</summary>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);" ><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">npm</span><span style="color: light-dark(#032F62, #9ECBFF);"> ci</span><span> &amp;&amp;</span><span style="color: light-dark(#6F42C1, #B392F0);"> npm</span><span style="color: light-dark(#032F62, #9ECBFF);"> run</span><span style="color: light-dark(#032F62, #9ECBFF);"> build</span></span></code></pre></details>
+<details name="zola-cmd-group">
+<summary>Deno 2（<code>deno.json</code>）</summary>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);" ><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">deno</span><span style="color: light-dark(#032F62, #9ECBFF);"> task</span><span style="color: light-dark(#032F62, #9ECBFF);"> build</span></span></code></pre></details>
+<details name="zola-cmd-group">
+<summary>Python（<code>requirements.txt</code>）与 Ruby（<code>Gemfile</code>）</summary>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);" ><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">pip</span><span style="color: light-dark(#032F62, #9ECBFF);"> install</span><span style="color: light-dark(#005CC5, #79B8FF);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);">r</span><span style="color: light-dark(#032F62, #9ECBFF);"> requirements.txt</span><span> &amp;&amp;</span><span style="color: light-dark(#6F42C1, #B392F0);"> sphinx-build</span><span style="color: light-dark(#005CC5, #79B8FF);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);">b</span><span style="color: light-dark(#032F62, #9ECBFF);"> dirhtml</span><span style="color: light-dark(#032F62, #9ECBFF);"> .</span><span style="color: light-dark(#032F62, #9ECBFF);"> _build/dirhtml</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">bundle</span><span style="color: light-dark(#032F62, #9ECBFF);"> install</span><span> &amp;&amp;</span><span style="color: light-dark(#6F42C1, #B392F0);"> bundle</span><span style="color: light-dark(#032F62, #9ECBFF);"> exec</span><span style="color: light-dark(#032F62, #9ECBFF);"> jekyll</span><span style="color: light-dark(#032F62, #9ECBFF);"> build</span></span></code></pre></details>
+<h2 id="5-si-da-di-ceng-gao-liang-yin-qing-neng-li-dui-zhao-xiao-jie">5. 四大底层高亮引擎能力对照小结</h2>
+<table><thead><tr><th style="text-align: left">高亮引擎代表</th><th style="text-align: left">典型采用框架</th><th style="text-align: left">构建期零运行时 JS</th><th style="text-align: left">原生行号 / 行高亮</th><th style="text-align: left">保留词法着色的 Diff</th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Shiki / Expressive Code</strong></td><td style="text-align: left">VitePress、Starlight、Fumadocs、Nextra、Rspress、Nuxt、Quartz</td><td style="text-align: left">✅ 纯静态内联样式</td><td style="text-align: left">✅ <code>{1,3-5}</code> / <code>[!code highlight]</code></td><td style="text-align: left">✅ <code>// [!code ++]</code></td></tr>
+<tr><td style="text-align: left"><strong>Prism.js</strong></td><td style="text-align: left">Docusaurus、VuePress、Eleventy (plugin)、Gatsby</td><td style="text-align: left">✅ 静态 Token 类名</td><td style="text-align: left">✅ <code>{1,3-5}</code> / 魔法注释</td><td style="text-align: left">⚠️ 需配 diff-highlight 插件</td></tr>
+<tr><td style="text-align: left"><strong>Pygments / Rouge</strong></td><td style="text-align: left">MkDocs Material、Sphinx、Pelican、Jekyll</td><td style="text-align: left">✅ Python/Ruby 编译直出</td><td style="text-align: left">✅ <code>hl_lines</code> / <code>emphasize-lines</code></td><td style="text-align: left">⚠️ 仅标准 <code>diff</code> 块红绿</td></tr>
+<tr><td style="text-align: left"><strong>Chroma / Giallo / hljs</strong></td><td style="text-align: left">Hugo (Go Chroma)、<strong>Zola (Rust Giallo)</strong>、mdBook (hljs)</td><td style="text-align: left">✅ (mdBook 为客户端 hljs)</td><td style="text-align: left">✅ <strong>Zola 原生 <code>linenos,hl_lines=3 7-9</code></strong></td><td style="text-align: left">⚠️ 仅标准 <code>diff</code> 块红绿</td></tr>
+</tbody></table>
+
+
+      </article>
+    </main>
+  </div>
+
+  <script src="/zola/vendor/katex.min.js"></script>
+  <script src="/zola/vendor/auto-render.min.js"></script>
+  <script src="/zola/vendor/mermaid.min.js"></script>
+  <script src="/zola/init.js"></script>
+</body>
+</html>
